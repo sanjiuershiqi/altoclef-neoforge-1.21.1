@@ -121,7 +121,7 @@ public final class ClientBootstrap {
                 }))
                 .then(Commands.literal("goto").then(net.minecraft.commands.Commands.argument("target", BlockPosArgument.blockPos())
                         .executes(ctx -> {
-                            var pos = BlockPosArgument.getLoadedBlockPos(ctx, "target");
+                            var pos = BlockPosArgument.getBlockPos(ctx, "target");
                             navigation.pathTo(pos);
                             ctx.getSource().sendSystemMessage(Component.literal("Navigating to " + pos.toShortString()));
                             return 1;
