@@ -11,6 +11,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 import adris.altoclef.platform.ClientRuntime;
+import adris.altoclef.tasks.TaskScheduler;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
@@ -18,6 +19,7 @@ import net.minecraft.network.chat.Component;
 public final class ClientBootstrap {
     private static boolean initialized;
     private static boolean enabled;
+    private static final TaskScheduler scheduler = new TaskScheduler();
     private static final KeyMapping TOGGLE_KEY = new KeyMapping(
             "key.altoclef.toggle", GLFW.GLFW_KEY_K, "key.categories.altoclef");
 
@@ -37,6 +39,7 @@ public final class ClientBootstrap {
         if (!ClientRuntime.inGame()) {
             return;
         }
+        if (enabled) scheduler.tick();
         if (!initialized) {
             initialized = true;
             // TODO: instantiate task runner, trackers and navigation adapter.
@@ -72,6 +75,7 @@ public final class ClientBootstrap {
                 }))
                 .then(Commands.literal("toggle").executes(ctx -> {
                     enabled = !enabled;
+                    if (enabled) scheduler.enable(); else scheduler.disable();
                     ctx.getSource().sendSystemMessage(Component.literal(
                             "Alto Clef " + (enabled ? "enabled" : "disabled")));
                     return 1;
