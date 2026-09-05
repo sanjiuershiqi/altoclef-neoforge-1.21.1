@@ -10,7 +10,8 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
-import adris.altoclef.platform.ClientRuntime;`r`nimport adris.altoclef.platform.NeoSettingsStore;
+import adris.altoclef.platform.ClientRuntime;
+import adris.altoclef.platform.NeoSettingsStore;
 import adris.altoclef.tasks.TaskScheduler;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -97,4 +98,5 @@ public final class ClientBootstrap {
         if (enabled) scheduler.enable(); else scheduler.disable();
     }
 }
+
 
