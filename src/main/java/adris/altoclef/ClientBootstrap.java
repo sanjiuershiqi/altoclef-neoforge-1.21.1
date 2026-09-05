@@ -14,6 +14,8 @@ import adris.altoclef.platform.ClientRuntime;
 import adris.altoclef.tasks.TaskScheduler;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import adris.altoclef.eventbus.EventBus;
+import adris.altoclef.eventbus.events.SendChatEvent;
 
 /** Platform bridge; Altoclef's internal event bus will be connected here. */
 public final class ClientBootstrap {
@@ -47,10 +49,13 @@ public final class ClientBootstrap {
             initialized = true;
             // TODO: instantiate task runner, trackers and navigation adapter.
         }
+        EventBus.publish(new adris.altoclef.eventbus.events.ClientTickEvent());
     }
 
     private static void onClientChat(ClientChatEvent event) {
-        // TODO: forward client commands to AltoClef's CommandExecutor.
+        SendChatEvent translated = new SendChatEvent(event.getMessage());
+        EventBus.publish(translated);
+        if (translated.isCancelled()) event.setCanceled(true);
     }
 
     private static void onRenderGui(RenderGuiEvent.Post event) {
