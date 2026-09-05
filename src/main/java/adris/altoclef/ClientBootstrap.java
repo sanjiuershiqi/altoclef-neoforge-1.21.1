@@ -9,6 +9,8 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.ChunkEvent;
+import adris.altoclef.platform.PlatformEvents;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 import adris.altoclef.platform.ClientRuntime;
@@ -43,6 +45,8 @@ public final class ClientBootstrap {
         NeoForge.EVENT_BUS.addListener(ClientBootstrap::onLoggingIn);
         NeoForge.EVENT_BUS.addListener(ClientBootstrap::onLoggingOut);
         NeoForge.EVENT_BUS.addListener(ClientBootstrap::registerClientCommands);
+        NeoForge.EVENT_BUS.addListener(PlatformEvents::onChunkLoad);
+        NeoForge.EVENT_BUS.addListener(PlatformEvents::onChunkUnload);
     }
 
     private static void onClientTick(ClientTickEvent.Post event) {
