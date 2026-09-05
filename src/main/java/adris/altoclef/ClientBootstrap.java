@@ -71,10 +71,13 @@ public final class ClientBootstrap {
 
     private static void onLoggingIn(ClientPlayerNetworkEvent.LoggingIn event) {
         initialized = false;
+        EventBus.publish(new adris.altoclef.eventbus.events.ClientConnectedEvent(event.getPlayer()));
     }
 
     private static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
         initialized = false;
+        EventBus.publish(new adris.altoclef.eventbus.events.ClientDisconnectedEvent());
+        scheduler.disable();
     }
 
     private static void registerClientCommands(RegisterClientCommandsEvent event) {
