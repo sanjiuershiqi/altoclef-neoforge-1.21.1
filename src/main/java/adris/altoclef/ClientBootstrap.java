@@ -39,6 +39,9 @@ public final class ClientBootstrap {
         if (!ClientRuntime.inGame()) {
             return;
         }
+        while (TOGGLE_KEY.consumeClick()) {
+            setEnabled(!enabled);
+        }
         if (enabled) scheduler.tick();
         if (!initialized) {
             initialized = true;
@@ -74,11 +77,15 @@ public final class ClientBootstrap {
                     return 1;
                 }))
                 .then(Commands.literal("toggle").executes(ctx -> {
-                    enabled = !enabled;
-                    if (enabled) scheduler.enable(); else scheduler.disable();
+                    setEnabled(!enabled);
                     ctx.getSource().sendSystemMessage(Component.literal(
                             "Alto Clef " + (enabled ? "enabled" : "disabled")));
                     return 1;
                 })));
+    }
+
+    private static void setEnabled(boolean value) {
+        enabled = value;
+        if (enabled) scheduler.enable(); else scheduler.disable();
     }
 }
