@@ -2,6 +2,8 @@ package adris.altoclef;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.ClientChatEvent;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 /** Platform bridge; Altoclef's internal event bus will be connected here. */
@@ -12,6 +14,8 @@ public final class ClientBootstrap {
 
     public static void register(IEventBus modBus) {
         NeoForge.EVENT_BUS.addListener(ClientBootstrap::onClientTick);
+        NeoForge.EVENT_BUS.addListener(ClientBootstrap::onClientChat);
+        NeoForge.EVENT_BUS.addListener(ClientBootstrap::onRenderGui);
     }
 
     private static void onClientTick(ClientTickEvent.Post event) {
@@ -19,5 +23,13 @@ public final class ClientBootstrap {
             initialized = true;
             // TODO: instantiate task runner, trackers and navigation adapter.
         }
+    }
+
+    private static void onClientChat(ClientChatEvent event) {
+        // TODO: forward client commands to AltoClef's CommandExecutor.
+    }
+
+    private static void onRenderGui(RenderGuiEvent.Post event) {
+        // TODO: render CommandStatusOverlay through GuiGraphics.
     }
 }
