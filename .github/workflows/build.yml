@@ -27,7 +27,7 @@ jobs:
         run: |
           mkdir -p libs baritone-artifact
           gh run download 33567841429 --repo cabaletta/baritone --name Artifacts --dir baritone-artifact
-          find baritone-artifact -type f -name '*.jar' -exec cp {} libs/ \;
+          find baritone-artifact -type f -name '*standalone-neoforge*.jar' -exec cp {} libs/ \;
           test -n "$(find libs -type f -name '*.jar' -print -quit)"
 
       - name: Build with Gradle

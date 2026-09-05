@@ -16,8 +16,10 @@ import org.lwjgl.glfw.GLFW;
 import adris.altoclef.platform.ClientRuntime;
 import adris.altoclef.platform.NeoSettingsStore;
 import adris.altoclef.platform.ReflectiveBaritoneFacade;
+import adris.altoclef.platform.NavigationService;
 import adris.altoclef.tasks.TaskScheduler;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.network.chat.Component;
 import adris.altoclef.eventbus.EventBus;
 import adris.altoclef.eventbus.events.SendChatEvent;
@@ -31,6 +33,7 @@ public final class ClientBootstrap {
     private static final TaskScheduler scheduler = new TaskScheduler();
     private static final NeoSettingsStore settings = new NeoSettingsStore();
     private static final ReflectiveBaritoneFacade baritone = new ReflectiveBaritoneFacade();
+    private static final NavigationService navigation = new NavigationService(baritone);
     private static final KeyMapping TOGGLE_KEY = new KeyMapping(
             "key.altoclef.toggle", GLFW.GLFW_KEY_K, "key.categories.altoclef");
 
@@ -110,7 +113,19 @@ public final class ClientBootstrap {
                     ctx.getSource().sendSystemMessage(Component.literal(
                             "Alto Clef " + (enabled ? "enabled" : "disabled")));
                     return 1;
-                })));
+                }))
+                .then(Commands.literal("stop").executes(ctx -> {
+                    navigation.cancel();
+                    ctx.getSource().sendSystemMessage(Component.literal("Navigation stopped"));
+                    return 1;
+                }))
+                .then(Commands.literal("goto").then(net.minecraft.commands.Commands.argument("target", BlockPosArgument.blockPos())
+                        .executes(ctx -> {
+                            var pos = BlockPosArgument.getLoadedBlockPos(ctx, "target");
+                            navigation.pathTo(pos);
+                            ctx.getSource().sendSystemMessage(Component.literal("Navigating to " + pos.toShortString()));
+                            return 1;
+                        }))));
     }
 
     private static void setEnabled(boolean value) {
