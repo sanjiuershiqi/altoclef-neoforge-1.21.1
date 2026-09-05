@@ -44,7 +44,6 @@ public final class ClientBootstrap {
         while (TOGGLE_KEY.consumeClick()) {
             setEnabled(!enabled);
         }
-        if (enabled) scheduler.tick();
         if (!initialized) {
             initialized = true;
             // TODO: instantiate task runner, trackers and navigation adapter.

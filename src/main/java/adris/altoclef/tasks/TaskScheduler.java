@@ -2,11 +2,17 @@ package adris.altoclef.tasks;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import adris.altoclef.eventbus.EventBus;
+import adris.altoclef.eventbus.events.ClientTickEvent;
 
 /** Small deterministic scheduler; legacy TaskRunner will be migrated onto this API. */
 public final class TaskScheduler {
     private final Deque<Task> tasks = new ArrayDeque<>();
     private boolean enabled;
+
+    public TaskScheduler() {
+        EventBus.subscribe(ClientTickEvent.class, ignored -> tick());
+    }
 
     public void enable() { enabled = true; }
     public void disable() {
