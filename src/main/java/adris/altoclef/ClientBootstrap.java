@@ -10,6 +10,7 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
+import adris.altoclef.platform.ClientRuntime;
 
 /** Platform bridge; Altoclef's internal event bus will be connected here. */
 public final class ClientBootstrap {
@@ -30,6 +31,9 @@ public final class ClientBootstrap {
     }
 
     private static void onClientTick(ClientTickEvent.Post event) {
+        if (!ClientRuntime.inGame()) {
+            return;
+        }
         if (!initialized) {
             initialized = true;
             // TODO: instantiate task runner, trackers and navigation adapter.
