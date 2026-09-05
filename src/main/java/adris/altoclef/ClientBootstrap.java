@@ -11,10 +11,13 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 import adris.altoclef.platform.ClientRuntime;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 
 /** Platform bridge; Altoclef's internal event bus will be connected here. */
 public final class ClientBootstrap {
     private static boolean initialized;
+    private static boolean enabled;
     private static final KeyMapping TOGGLE_KEY = new KeyMapping(
             "key.altoclef.toggle", GLFW.GLFW_KEY_K, "key.categories.altoclef");
 
@@ -61,6 +64,17 @@ public final class ClientBootstrap {
     }
 
     private static void registerClientCommands(RegisterClientCommandsEvent event) {
-        // CommandExecutor/TabCompleter will be registered here during command migration.
+        event.getDispatcher().register(Commands.literal("altoclef")
+                .then(Commands.literal("status").executes(ctx -> {
+                    ctx.getSource().sendSystemMessage(Component.literal(
+                            "Alto Clef NeoForge: " + (enabled ? "enabled" : "disabled")));
+                    return 1;
+                }))
+                .then(Commands.literal("toggle").executes(ctx -> {
+                    enabled = !enabled;
+                    ctx.getSource().sendSystemMessage(Component.literal(
+                            "Alto Clef " + (enabled ? "enabled" : "disabled")));
+                    return 1;
+                })));
     }
 }
