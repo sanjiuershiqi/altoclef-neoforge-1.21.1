@@ -21,6 +21,15 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Fetch official Baritone 1.21.1 NeoForge artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p libs baritone-artifact
+          gh run download 33567841429 --repo cabaletta/baritone --name Artifacts --dir baritone-artifact
+          find baritone-artifact -type f -name '*.jar' -exec cp {} libs/ \;
+          test -n "$(find libs -type f -name '*.jar' -print -quit)"
+
       - name: Build with Gradle
         run: ./gradlew build
 

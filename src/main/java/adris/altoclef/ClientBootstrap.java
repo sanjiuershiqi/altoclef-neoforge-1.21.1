@@ -15,6 +15,7 @@ import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 import adris.altoclef.platform.ClientRuntime;
 import adris.altoclef.platform.NeoSettingsStore;
+import adris.altoclef.platform.ReflectiveBaritoneFacade;
 import adris.altoclef.tasks.TaskScheduler;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -29,6 +30,7 @@ public final class ClientBootstrap {
     private static boolean enabled;
     private static final TaskScheduler scheduler = new TaskScheduler();
     private static final NeoSettingsStore settings = new NeoSettingsStore();
+    private static final ReflectiveBaritoneFacade baritone = new ReflectiveBaritoneFacade();
     private static final KeyMapping TOGGLE_KEY = new KeyMapping(
             "key.altoclef.toggle", GLFW.GLFW_KEY_K, "key.categories.altoclef");
 
@@ -99,7 +101,8 @@ public final class ClientBootstrap {
         event.getDispatcher().register(Commands.literal("altoclef")
                 .then(Commands.literal("status").executes(ctx -> {
                     ctx.getSource().sendSystemMessage(Component.literal(
-                            "Alto Clef NeoForge: " + (enabled ? "enabled" : "disabled")));
+                            "Alto Clef NeoForge: " + (enabled ? "enabled" : "disabled")
+                                    + "; " + baritone.diagnostic()));
                     return 1;
                 }))
                 .then(Commands.literal("toggle").executes(ctx -> {
