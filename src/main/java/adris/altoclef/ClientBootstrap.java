@@ -17,6 +17,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import adris.altoclef.eventbus.EventBus;
 import adris.altoclef.eventbus.events.SendChatEvent;
+import adris.altoclef.eventbus.events.GameOverlayEvent;
 
 /** Platform bridge; Altoclef's internal event bus will be connected here. */
 public final class ClientBootstrap {
@@ -62,7 +63,7 @@ public final class ClientBootstrap {
     }
 
     private static void onRenderGui(RenderGuiEvent.Post event) {
-        // TODO: render CommandStatusOverlay through GuiGraphics.
+        EventBus.publish(new GameOverlayEvent(event.getGuiGraphics(), event.getPartialTick()));
     }
 
     private static void registerKeys(RegisterKeyMappingsEvent event) {
