@@ -22,12 +22,15 @@ public final class ClientBootstrap {
     private static boolean initialized;
     private static boolean enabled;
     private static final TaskScheduler scheduler = new TaskScheduler();
+    private static final NeoSettingsStore settings = new NeoSettingsStore();
     private static final KeyMapping TOGGLE_KEY = new KeyMapping(
             "key.altoclef.toggle", GLFW.GLFW_KEY_K, "key.categories.altoclef");
 
     private ClientBootstrap() {}
 
     public static void register(IEventBus modBus) {
+        enabled = settings.enabledByDefault();
+        if (enabled) scheduler.enable();
         NeoForge.EVENT_BUS.addListener(ClientBootstrap::onClientTick);
         NeoForge.EVENT_BUS.addListener(ClientBootstrap::onClientChat);
         NeoForge.EVENT_BUS.addListener(ClientBootstrap::onRenderGui);
@@ -90,6 +93,7 @@ public final class ClientBootstrap {
 
     private static void setEnabled(boolean value) {
         enabled = value;
+        settings.setEnabled(enabled);
         if (enabled) scheduler.enable(); else scheduler.disable();
     }
 }
