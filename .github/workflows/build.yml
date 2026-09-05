@@ -41,3 +41,19 @@ jobs:
           path: build/libs/*.jar
           if-no-files-found: error
           retention-days: 14
+
+      - name: Package Altoclef and Baritone mods
+        if: success()
+        run: |
+          mkdir -p dist
+          cp build/libs/*.jar dist/
+          cp libs/*.jar dist/
+
+      - name: Upload mod bundle
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: altoclef-neoforge-1.21.1-bundle
+          path: dist/*.jar
+          if-no-files-found: error
+          retention-days: 14
