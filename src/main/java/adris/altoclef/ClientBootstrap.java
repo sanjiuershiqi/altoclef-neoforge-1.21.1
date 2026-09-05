@@ -4,6 +4,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.ClientChatEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
@@ -18,6 +19,7 @@ import net.minecraft.network.chat.Component;
 import adris.altoclef.eventbus.EventBus;
 import adris.altoclef.eventbus.events.SendChatEvent;
 import adris.altoclef.eventbus.events.GameOverlayEvent;
+import adris.altoclef.eventbus.events.ScreenOpenEvent;
 
 /** Platform bridge; Altoclef's internal event bus will be connected here. */
 public final class ClientBootstrap {
@@ -36,6 +38,7 @@ public final class ClientBootstrap {
         NeoForge.EVENT_BUS.addListener(ClientBootstrap::onClientTick);
         NeoForge.EVENT_BUS.addListener(ClientBootstrap::onClientChat);
         NeoForge.EVENT_BUS.addListener(ClientBootstrap::onRenderGui);
+        NeoForge.EVENT_BUS.addListener(ClientBootstrap::onScreenOpening);
         modBus.addListener(ClientBootstrap::registerKeys);
         NeoForge.EVENT_BUS.addListener(ClientBootstrap::onLoggingIn);
         NeoForge.EVENT_BUS.addListener(ClientBootstrap::onLoggingOut);
@@ -64,6 +67,13 @@ public final class ClientBootstrap {
 
     private static void onRenderGui(RenderGuiEvent.Post event) {
         EventBus.publish(new GameOverlayEvent(event.getGuiGraphics(), event.getPartialTick()));
+    }
+
+    private static void onScreenOpening(ScreenEvent.Opening event) {
+        ScreenOpenEvent translated = new ScreenOpenEvent(event.getScreen(), true);
+        EventBus.publish(translated);
+        if (event.isCanceled()) return;
+        EventBus.publish(new ScreenOpenEvent(event.getScreen(), false));
     }
 
     private static void registerKeys(RegisterKeyMappingsEvent event) {
